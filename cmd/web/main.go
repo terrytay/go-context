@@ -10,7 +10,6 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	internal "github.com/terrytay/go-context/internal/as-middleware"
-	tools "github.com/terrytay/go-context/tools/json"
 )
 
 func main() {
@@ -18,7 +17,7 @@ func main() {
 	r := chi.NewRouter()
 
 	r.Use(internal.GuidMiddleware)
-	r.HandleFunc("/health", healthCheck)
+	r.HandleFunc("/health", internal.HealthCheck)
 
 	s := &http.Server{
 		Addr:         ":8000",
@@ -42,18 +41,4 @@ func main() {
 
 	tc, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	s.Shutdown(tc)
-}
-
-func healthCheck(rw http.ResponseWriter, r *http.Request) {
-	uuid := r.Context().Value(internal.Uuid{})
-
-	response := internal.Health{
-		Message:   "OK",
-		Timestamp: time.Now().UnixMicro(),
-		Uuid:      uuid.(string),
-	}
-
-	rw.WriteHeader(http.StatusOK)
-
-	tools.ToJSON(response, rw)
 }
