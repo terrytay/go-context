@@ -17,7 +17,7 @@ func WithValue() {
 
 	ctx = addValue(ctx, Product{}, Product{Name: "Milo", Description: "A sweet drink"})
 
-	product := readValue(ctx, Product{})
+	product := readValue(ctx, Product{}) // Getting value from context
 	tools.ToJSON(product, os.Stdout)
 }
 
